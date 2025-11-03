@@ -1,63 +1,42 @@
-# AdventureWorks_PowerBI_SchemaTransformation
+# Adventure Works: Star Schema to Snowflake Schema
 
-# Adventure Works: Star Schema to Snowflake Schema Transformation in Power BI
+## 📘 Project Summary
+This Power BI project demonstrates how to build a **Star Schema** and then convert it into a **Snowflake Schema** using the **Adventure Works** dataset.  
+The objective is to understand the difference between the two data modeling approaches and how normalization affects data relationships.
 
-## Overview
-This project demonstrates how to design and transform a Star Schema into a Snowflake Schema using the Adventure Works dataset in Microsoft Power BI.
+---
 
-The goal of this project is to understand the structure, relationships, and normalization process involved in building efficient data models for analysis.
+## ⭐ Step 1: Star Schema
 
+### 1. Load Dataset
+- Imported `Adventure Works Data.xlsx` into Power BI.
+- Selected the following tables:
+  - `Sales`
+  - `Product`
+  - `Region`
+  - `Salesperson`
 
+### 2. Identify Tables
+- **Fact Table:** `Sales`
+- **Dimension Tables:** `Product`, `Region`, `Salesperson`
 
-## Project Objectives
-- Build a Star Schema with four main tables: Sales, Product, Region, and Salesperson.
-- Transform the Star Schema into a Snowflake Schema by normalizing the Product table.
-- Create new lookup tables such as Category and Subcategory.
-- Establish proper relationships, cardinality, and cross-filter directions.
-- Understand how normalization improves data structure and performance.
+### 3. Create Relationships
+- `Sales.ProductKey` → `Product.ProductKey`
+- `Sales.SalesTerritoryKey` → `Region.SalesTerritoryKey`
+- `Sales.EmployeeKey` → `Salesperson.EmployeeKey`
 
+### 4. Result
+- Simple **star-shaped** model with one fact table in the center.
+- Relationship type: **Many-to-One**
+- Cross filter direction: **Single**
 
+---
 
-## Data Model Summary
+## ❄️ Step 2: Snowflake Schema
 
-### Star Schema
-In the Star Schema:
-- The Sales table is the fact table.
-- Product, Region, and Salesperson are dimension tables.
-- Relationships:
-  - Sales[ProductKey] → Product[ProductKey]
-  - Sales[SalesTerritoryKey] → Region[SalesTerritoryKey]
-  - Sales[EmployeeKey] → Salesperson[EmployeeKey]
-    
-### Snowflake Schema
-In the Snowflake Schema:
-- The Product table is normalized into Category and Subcategory tables.
-- Relationships:
-  - Category[Category] → Subcategory[Category]
-  - Subcategory[Subcategory] → Product[Subcategory]
+### 1. Normalize Product Table
+Created two new lookup tables using DAX in Power BI:
 
-
-## Steps Performed
-
-### 1. Data Loading
-- Loaded the Adventure Works Excel dataset containing four tables:
-  - Sales
-  - Product
-  - Region
-  - Salesperson
-- Disabled Autodetect Relationships in Power BI.
-
-### 2. Star Schema Configuration
-- Built the fact-dimension relationships.
-- Ensured correct cardinality and filter direction.
-
-### 3. Schema Transformation (Normalization)
-Created lookup tables using DAX:
-
-Subcategory = DISTINCT(SELECTCOLUMNS(Product,
-    "Subcategory", Product[Subcategory],
-    "Category", Product[Category]
-))
-
-
-
+```DAX
+Category = GROUPBY('Product', 'Product'[Category ID], 'Product'[Category])
+Subcategory = GROUPBY('Product', 'Product'[Subcategory ID], 'Product'[Category ID], 'Product'[Subcategory])
