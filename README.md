@@ -28,12 +28,7 @@ In the Star Schema:
   - Sales[ProductKey] → Product[ProductKey]
   - Sales[SalesTerritoryKey] → Region[SalesTerritoryKey]
   - Sales[EmployeeKey] → Salesperson[EmployeeKey]
-
-**Model Preview:**  
-(Insert your Star Schema screenshot here.)
-
-
-
+    
 ### Snowflake Schema
 In the Snowflake Schema:
 - The Product table is normalized into Category and Subcategory tables.
